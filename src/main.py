@@ -7,16 +7,9 @@ import logging
 with open('config.json', 'r') as cfgfile:
     conf = json.load(cfgfile)
 
-logging.basicConfig(format="%(asctime)s %(levelname)s:%(message)s", level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s:%(message)s", level=logging.DEBUG)
+logger = logging.getLogger('lemon')
 
-
-class BotClient(discord.Client):
-    async def on_ready(self):
-        logger.info(f"Logged on as {self.user}")
-    async def on_message(self, message: discord.Message):
-        logger.debug(f"Message from {message.author}: {message.content}")
-    
 
 intents = discord.Intents.all()
 intents.polls = False
@@ -24,6 +17,23 @@ intents.presences = False
 intents.typing = False
 intents.invites = False
 
+
+bot = discord.Client(intents=intents)
+
+@bot.event
+async def on_ready():
+    logger.info(f"Logged on as {bot.user}")
+
+@bot.event
+async def on_message(message: discord.Message):
+    if message.author == bot.user:
+        return
+
+    logger.debug(f"Message from {message.author}: {message.content}")
+
+    if message.content.startswith(".hello"):
+        await message.channel.send("Hello.")
+    
+
 if __name__ == "__main__":
-    bot = BotClient(intents=intents)
     bot.run(conf["token"])
