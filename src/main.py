@@ -7,7 +7,7 @@ import logging
 with open('config.json', 'r') as cfgfile:
     conf = json.load(cfgfile)
 
-logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s:%(message)s", level=logging.DEBUG)
+logging.basicConfig(format="%(asctime)s %(levelname)s %(name)s:%(message)s", level=logging.WARNING, filename='lemon.log', filemode='a')
 logger = logging.getLogger('lemon')
 
 
